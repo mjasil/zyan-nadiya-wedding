@@ -1,0 +1,11 @@
+import { cp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
+await rm('dist', { recursive: true, force: true });
+await mkdir('dist', { recursive: true });
+await cp('public', 'dist', { recursive: true });
+await cp('src', 'dist/src', { recursive: true });
+await cp('vendor', 'dist/vendor', { recursive: true });
+const configuredOrigin = process.env.SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://zyan-nadiya-wedding.vercel.app');
+const origin = new URL(configuredOrigin).origin;
+const html = await readFile('index.html', 'utf8');
+await writeFile('dist/index.html', html.replaceAll('https://zyan-nadiya-wedding.jasiljasil002.chatgpt.site', origin));
+console.log('Groom invitation built.');
